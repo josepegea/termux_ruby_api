@@ -1,8 +1,40 @@
 # TermuxRubyApi
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/termux_ruby_api`. To experiment with that code, run `bin/console` for an interactive prompt.
+TermuxRubyApi is a Gem that provides a Ruby interface to a lot of
+Android functionality thanks to [Termux](https://termux.com/) and
+[Termux API](https://wiki.termux.com/wiki/Termux:API).
 
-TODO: Delete this and the text above, and describe your gem
+
+    require 'termux_ruby_api'
+
+    # Connect to the API
+    t_api = TermuxRubyApi::Base.new
+
+    # Get a list of the latest 50 calls
+    call_log = t_api.call_log.log(limit: 50)
+
+    # Get the total seconds spent in outgoing calls
+    total_duration = call_log.select { |c| c[:type] == :OUTGOING }.map {|c| c[:duration] }.sum
+
+    # Get the result in Text To Speak
+    t_api.tts.speak("The total duration is #{total_duration} seconds")
+
+[Termux](https://termux.com/) is a set of Android apps that provide a
+complete Debian-like environment for Android, including Ruby, RubyGems
+and a whole lot of other packages.
+
+Part of that package, Termux API provides a way to invoke specific
+Android functionality, like sending SMS, reading the call log,
+accessing the GPS, initiating a phone call and more.
+
+Termux API offers this connection by means of shell scripts that
+accept command arguments and return data in JSON format.
+
+TermuxRubyApi provides a convenient access to these scripts from the
+confort of a set of Ruby classes that encapsulate all their
+functionality and that allows the user to apply all the power and
+flexibility of Ruby to access and manipulate this data, interacting
+with the Android host.
 
 ## Installation
 
