@@ -83,6 +83,19 @@ EOT
     @base.sms.draft(offset: 1, limit: 2)
   end
 
+  it "works with '_all'" do
+    expect(@base).to receive(:`).with('termux-sms-list -l -1').once.and_return(result)
+    @base.sms.list_all
+    expect(@base).to receive(:`).with('termux-sms-list -l -1 -t inbox').once.and_return(result)
+    @base.sms.inbox_all
+    expect(@base).to receive(:`).with('termux-sms-list -l -1 -t outbox').once.and_return(result)
+    @base.sms.outbox_all
+    expect(@base).to receive(:`).with('termux-sms-list -l -1 -t sent').once.and_return(result)
+    @base.sms.sent_all
+    expect(@base).to receive(:`).with('termux-sms-list -l -1 -t draft').once.and_return(result)
+    @base.sms.draft_all
+  end
+
   it "parses the resulting JSON" do
     expect(@base).to receive(:`).and_return(result)
     res = @base.sms.list
@@ -91,5 +104,17 @@ EOT
     expect(res.map { |r| r[:type] }).to match_array(%i(inbox inbox inbox))
     times = ['2018-12-07 18:11', '2018-12-09 16:25', '2018-12-10 00:25'].map { |s| Time.parse(s) }
     expect(res.map { |r| r[:received] }).to match_array(times)
+  end
+
+  describe "Sending..." do
+    it "Sends with a single phone number" do
+      expect(@base).to receive(:`).with('termux-sms-send -n 123456789 Hello\ world\!\!').once.and_return(result)
+      @base.sms.send('Hello world!!', 123456789)
+    end
+
+    it "Sends with a several phone numbers" do
+      expect(@base).to receive(:`).with('termux-sms-send -n 123456789,987654321 Hello\ world\!\!').once.and_return(result)
+      @base.sms.send('Hello world!!', 123456789, 987654321)
+    end
   end
 end

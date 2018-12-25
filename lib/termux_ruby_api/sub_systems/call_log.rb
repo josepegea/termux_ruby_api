@@ -8,6 +8,10 @@ module TermuxRubyApi
         res = owner.json_api_command('call-log', *args)
         TermuxRubyApi::Utils::Xformer.xform(res, date: :time, duration: :duration, type: :symbol)
       end
+
+      def log_all
+        log(limit: -1)
+      end
     end
   end
 end

@@ -53,6 +53,11 @@ EOT
     @base.call_log.log(offset: 1, limit: 2)
   end
 
+  it "works with log_all" do
+    expect(@base).to receive(:`).with('termux-call-log -l -1').once.and_return(result)
+    @base.call_log.log_all
+  end
+
   it "parses the resulting JSON" do
     expect(@base).to receive(:`).and_return(result)
     res = @base.call_log.log
