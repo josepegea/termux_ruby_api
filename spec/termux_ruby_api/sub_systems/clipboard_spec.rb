@@ -7,17 +7,12 @@ RSpec.describe TermuxRubyApi::SubSystems::Clipboard do
   end
 
   it "get works" do
-    expect(@base).to receive(:`).with('termux-clipboard-get').once
+    expect(@base).to receive(:api_command).with('clipboard-get').once
     @base.clipboard.get
   end
 
   it "set works" do
-    expect(@base).to receive(:`).with('termux-clipboard-set Hello').once
-    @base.clipboard.set('Hello')
-  end
-
-  it "set works with special chars" do
-    expect(@base).to receive(:`).with('termux-clipboard-set \"Hello\ there\"\ said\ O\\\'Donell\ \(from\ Smith\&Smith\ \<\|\>\)').once
-    @base.clipboard.set('"Hello there" said O\'Donell (from Smith&Smith <|>)')
+    expect(@base).to receive(:api_command).with('clipboard-set', "Hello\nthere!").once
+    @base.clipboard.set("Hello\nthere!")
   end
 end

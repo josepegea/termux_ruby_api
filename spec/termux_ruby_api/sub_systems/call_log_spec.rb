@@ -34,32 +34,32 @@ EOT
   end
 
   it "works without arguments" do
-    expect(@base).to receive(:`).with('termux-call-log').once.and_return(result)
+    expect(@base).to receive(:api_command).with('call-log', nil).once.and_return(result)
     @base.call_log.log
   end
 
   it "sends 'limit' argument" do
-    expect(@base).to receive(:`).with('termux-call-log -l 2').once.and_return(result)
+    expect(@base).to receive(:api_command).with('call-log', nil, '-l', '2').once.and_return(result)
     @base.call_log.log(limit: 2)
   end
 
   it "sends 'offset' argument" do
-    expect(@base).to receive(:`).with('termux-call-log -o 1').once.and_return(result)
+    expect(@base).to receive(:api_command).with('call-log', nil, '-o', '1').once.and_return(result)
     @base.call_log.log(offset: 1)
   end
 
   it "sends both arguments" do
-    expect(@base).to receive(:`).with('termux-call-log -l 2 -o 1').once.and_return(result)
+    expect(@base).to receive(:api_command).with('call-log', nil, '-l', '2', '-o', '1').once.and_return(result)
     @base.call_log.log(offset: 1, limit: 2)
   end
 
   it "works with log_all" do
-    expect(@base).to receive(:`).with('termux-call-log -l -1').once.and_return(result)
+    expect(@base).to receive(:api_command).with('call-log', nil, '-l', '-1').once.and_return(result)
     @base.call_log.log_all
   end
 
   it "parses the resulting JSON" do
-    expect(@base).to receive(:`).and_return(result)
+    expect(@base).to receive(:api_command).and_return(result)
     res = @base.call_log.log
     expect(res.size).to eq(3)
     expect(res.map(&:keys).flatten.uniq).to match_array(%i(name phone_number type date duration))

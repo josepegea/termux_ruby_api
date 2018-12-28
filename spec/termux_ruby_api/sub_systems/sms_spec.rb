@@ -40,64 +40,64 @@ EOT
   end
 
   it "works without arguments" do
-    expect(@base).to receive(:`).with('termux-sms-list').once.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil).once.and_return(result)
     @base.sms.list
   end
 
   it "sends 'limit' argument" do
-    expect(@base).to receive(:`).with('termux-sms-list -l 2').once.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '2').once.and_return(result)
     @base.sms.list(limit: 2)
   end
 
   it "sends 'offset' argument" do
-    expect(@base).to receive(:`).with('termux-sms-list -o 1').once.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-o', '1').once.and_return(result)
     @base.sms.list(offset: 1)
   end
 
   it "sends 'type' argument" do
-    expect(@base).to receive(:`).with('termux-sms-list -t inbox').twice.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-t', :inbox).twice.and_return(result)
     @base.sms.list(type: :inbox)
     @base.sms.inbox
-    expect(@base).to receive(:`).with('termux-sms-list -t sent').twice.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-t', :sent).twice.and_return(result)
     @base.sms.list(type: :sent)
     @base.sms.sent
-    expect(@base).to receive(:`).with('termux-sms-list -t outbox').twice.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-t', :outbox).twice.and_return(result)
     @base.sms.list(type: :outbox)
     @base.sms.outbox
-    expect(@base).to receive(:`).with('termux-sms-list -t draft').twice.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-t', :draft).twice.and_return(result)
     @base.sms.list(type: :draft)
     @base.sms.draft
   end
 
   it "combines arguments" do
-    expect(@base).to receive(:`).with('termux-sms-list -l 2 -o 1').once.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '2', '-o', '1').once.and_return(result)
     @base.sms.list(offset: 1, limit: 2)
-    expect(@base).to receive(:`).with('termux-sms-list -l 2 -o 1 -t inbox').twice.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '2', '-o', '1', '-t', :inbox).twice.and_return(result)
     @base.sms.list(offset: 1, limit: 2, type: :inbox)
     @base.sms.inbox(offset: 1, limit: 2)
-    expect(@base).to receive(:`).with('termux-sms-list -l 2 -o 1 -t outbox').twice.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '2', '-o', '1', '-t', :outbox).twice.and_return(result)
     @base.sms.list(offset: 1, limit: 2, type: :outbox)
     @base.sms.outbox(offset: 1, limit: 2)
-    expect(@base).to receive(:`).with('termux-sms-list -l 2 -o 1 -t draft').twice.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '2', '-o', '1', '-t', :draft).twice.and_return(result)
     @base.sms.list(offset: 1, limit: 2, type: :draft)
     @base.sms.draft(offset: 1, limit: 2)
   end
 
   it "works with '_all'" do
-    expect(@base).to receive(:`).with('termux-sms-list -l -1').once.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '-1').once.and_return(result)
     @base.sms.list_all
-    expect(@base).to receive(:`).with('termux-sms-list -l -1 -t inbox').once.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '-1', '-t', :inbox).once.and_return(result)
     @base.sms.inbox_all
-    expect(@base).to receive(:`).with('termux-sms-list -l -1 -t outbox').once.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '-1', '-t', :outbox).once.and_return(result)
     @base.sms.outbox_all
-    expect(@base).to receive(:`).with('termux-sms-list -l -1 -t sent').once.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '-1', '-t', :sent).once.and_return(result)
     @base.sms.sent_all
-    expect(@base).to receive(:`).with('termux-sms-list -l -1 -t draft').once.and_return(result)
+    expect(@base).to receive(:api_command).with('sms-list', nil, '-l', '-1', '-t', :draft).once.and_return(result)
     @base.sms.draft_all
   end
 
   it "parses the resulting JSON" do
-    expect(@base).to receive(:`).and_return(result)
+    expect(@base).to receive(:api_command).and_return(result)
     res = @base.sms.list
     expect(res.size).to eq(3)
     expect(res.map(&:keys).flatten.uniq).to match_array(%i(threadid type read sender number received body))
@@ -108,12 +108,12 @@ EOT
 
   describe "Sending..." do
     it "Sends with a single phone number" do
-      expect(@base).to receive(:`).with('termux-sms-send -n 123456789 Hello\ world\!\!').once.and_return(result)
+      expect(@base).to receive(:api_command).with('sms-send', 'Hello world!!', '-n', '123456789').once.and_return(result)
       @base.sms.send('Hello world!!', 123456789)
     end
 
     it "Sends with a several phone numbers" do
-      expect(@base).to receive(:`).with('termux-sms-send -n 123456789,987654321 Hello\ world\!\!').once.and_return(result)
+      expect(@base).to receive(:api_command).with('sms-send', 'Hello world!!', '-n', '123456789,987654321').once.and_return(result)
       @base.sms.send('Hello world!!', 123456789, 987654321)
     end
   end

@@ -5,7 +5,7 @@ module TermuxRubyApi
         args = []
         args += ['-p', provider] unless provider.nil?
         args += ['-r', request] unless request.nil?
-        res = owner.json_api_command('location', *args)
+        res = owner.json_api_command('location', nil, *args)
         TermuxRubyApi::Utils::Xformer.xform(res, provider: :symbol)
       end
 
