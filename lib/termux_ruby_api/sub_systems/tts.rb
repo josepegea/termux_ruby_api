@@ -12,6 +12,10 @@ module TermuxRubyApi
         args += ['-s', stream.to_s] unless stream.nil?
         owner.api_command('tts-speak', value, *args)
       end
+
+      def engines
+        owner.json_api_command('tts-engines')
+      end
     end
   end
 end
