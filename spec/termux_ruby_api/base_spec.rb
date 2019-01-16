@@ -8,22 +8,22 @@ RSpec.describe TermuxRubyApi::Base do
 
   describe "parsing arguments and standard input" do
     it "works with a basic command (successful)" do
-      expect(Open3).to receive(:capture3).with('termux-test', stdin_data: nil).once.and_return(['', '', success])
+      expect(Open3).to receive(:capture3).with('termux-test', stdin_data: '').once.and_return(['', '', success])
       subject.api_command('test')
     end
 
     it "works with a basic command (unsuccessful)" do
-      expect(Open3).to receive(:capture3).with('termux-test', stdin_data: nil).once.and_return(['', '', failure])
+      expect(Open3).to receive(:capture3).with('termux-test', stdin_data: '').once.and_return(['', '', failure])
       expect { subject.api_command('test') }.to raise_error(TermuxRubyApi::CommandError)
     end
 
     it "works with a command with args (successful)" do
-      expect(Open3).to receive(:capture3).with('termux-test', 'x', 'y', stdin_data: nil).once.and_return(['', '', success])
+      expect(Open3).to receive(:capture3).with('termux-test', 'x', 'y', stdin_data: '').once.and_return(['', '', success])
       subject.api_command('test', nil, 'x', 'y')
     end
 
     it "works with a command with args (unsuccessful)" do
-      expect(Open3).to receive(:capture3).with('termux-test', 'x', 'y', stdin_data: nil).once.and_return(['', '', failure])
+      expect(Open3).to receive(:capture3).with('termux-test', 'x', 'y', stdin_data: '').once.and_return(['', '', failure])
       expect { subject.api_command('test', nil, 'x', 'y') }.to raise_error(TermuxRubyApi::CommandError)
     end
 
@@ -61,7 +61,7 @@ RSpec.describe TermuxRubyApi::Base do
                                "\\\"Hello\\ there\\\"\\ said\\ O\\'Donnell\\ \\(from\\ Smith\\&Smith\\)",
                                "\\&\\<\\|\\>\\!",
                                "\\`rm\\ -rf\\`",
-                               stdin_data: nil)
+                               stdin_data: '')
                          .once
                          .and_return(['', '', success])
       subject.api_command('test&ls -l', nil, '"Hello there" said O\'Donnell (from Smith&Smith)', '&<|>!', '`rm -rf`')
@@ -72,12 +72,12 @@ RSpec.describe TermuxRubyApi::Base do
     let (:json_result) { '{ "code": 1, "name": "string", "values": [1,2,3] }' }
 
     it "works with a basic command" do
-      expect(Open3).to receive(:capture3).with('termux-test', stdin_data: nil).once.and_return([json_result, '', success])
+      expect(Open3).to receive(:capture3).with('termux-test', stdin_data: '').once.and_return([json_result, '', success])
       expect(subject.json_api_command('test')).to eq(code: 1, name: 'string', values: [1,2,3])
     end
 
     it "works with a command with args" do
-      expect(Open3).to receive(:capture3).with('termux-test', 'x', 'y', stdin_data: nil).once.and_return([json_result, '', success])
+      expect(Open3).to receive(:capture3).with('termux-test', 'x', 'y', stdin_data: '').once.and_return([json_result, '', success])
       expect(subject.json_api_command('test', nil, 'x', 'y')).to eq(code: 1, name: 'string', values: [1,2,3])
     end
 
