@@ -32,12 +32,12 @@ module TermuxRubyApi
 
     def streamed_api_command(command, stdin = nil, *args, &block)
       command, args = prepare_command_args(command, args)
-      i, o, t = Open3.popen2(command, args)
-      i.puts(stdin) unless i.blank? # If we have any input, send it to the child
-      i.close                       # Afterwards we can close child's stdin
+      i, o, t = Open3.popen2([command, *args].join(' '))
+      i.puts(stdin) unless stdin.blank? # If we have any input, send it to the child
+      i.close                           # Afterwards we can close child's stdin
       if block_given?
         o.each_line do |line|
-          block.yield line
+          yield line
         end
         o.close
         raise "#{command} failed" unless t.value.success?
@@ -48,12 +48,12 @@ module TermuxRubyApi
 
     def json_streamed_api_command(command, stdin = nil, *args, &block)
       partial_out = ''
-      streamed_api_command(command, stdin, args) do |line|
-        partial << line
+      streamed_api_command(command, stdin, *args) do |line|
+        partial_out << line
         begin
-          parsed_json = JSON.parse(res, symbolize_names: true)
+          parsed_json = JSON.parse(partial_out, symbolize_names: true)
           partial_out = ''
-          block.yield parsed_json
+          yield parsed_json
         rescue
         end
       end

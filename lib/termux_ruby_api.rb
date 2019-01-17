@@ -1,3 +1,4 @@
+require 'active_support/all'
 require "termux_ruby_api/version"
 require "termux_ruby_api/base"
 require "termux_ruby_api/sub_systems"
