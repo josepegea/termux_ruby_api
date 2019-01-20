@@ -27,7 +27,7 @@ module TermuxRubyApi
     def json_api_command(command, stdin = nil, *args)
       res = api_command(command, stdin, *args)
       return res if res.nil? || res == ''
-      JSON.parse(res, symbolize_names: true)
+      JSON.parse(res, symbolize_names: true, object_class: ActiveSupport::HashWithIndifferentAccess)
     end
 
     def streamed_api_command(command, stdin = nil, *args, &block)
@@ -51,7 +51,7 @@ module TermuxRubyApi
       streamed_api_command(command, stdin, *args) do |line|
         partial_out << line
         begin
-          parsed_json = JSON.parse(partial_out, symbolize_names: true)
+          parsed_json = JSON.parse(partial_out, symbolize_names: true, object_class: ActiveSupport::HashWithIndifferentAccess)
           partial_out = ''
           yield parsed_json
         rescue
