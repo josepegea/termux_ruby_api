@@ -3,9 +3,10 @@ module TermuxRubyApi
     class Sms < Base
       def list(limit: nil, offset: nil, type: nil)
         args = []
-        args += ['-l', limit.to_s] unless limit.nil?
-        args += ['-o', offset.to_s] unless offset.nil?
-        args += ['-t', type] unless type.nil?
+        args = owner.generate_args_list([['-l', limit&.to_s],
+                                         ['-o', offset&.to_s],
+                                         ['-t', type]
+                                        ])
         res = owner.json_api_command('sms-list', nil, *args)
         TermuxRubyApi::Utils::Xformer.xform(res, received: :time, type: :symbol)
       end
@@ -47,7 +48,7 @@ module TermuxRubyApi
       end
 
       def send(msg, *numbers)
-        args = ["-n", "#{numbers.join(',')}"]
+        args = owner.generate_args(["-n", "#{numbers.join(',')}"])
         owner.api_command('sms-send', msg, *args)
       end
     end

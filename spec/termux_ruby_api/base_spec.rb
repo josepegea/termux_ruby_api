@@ -73,22 +73,22 @@ RSpec.describe TermuxRubyApi::Base do
 
     it "works with a basic command" do
       expect(Open3).to receive(:capture3).with('termux-test', stdin_data: '').once.and_return([json_result, '', success])
-      expect(subject.json_api_command('test')).to eq(code: 1, name: 'string', values: [1,2,3])
+      expect(subject.json_api_command('test')).to eq({ code: 1, name: 'string', values: [1,2,3] }.with_indifferent_access)
     end
 
     it "works with a command with args" do
       expect(Open3).to receive(:capture3).with('termux-test', 'x', 'y', stdin_data: '').once.and_return([json_result, '', success])
-      expect(subject.json_api_command('test', nil, 'x', 'y')).to eq(code: 1, name: 'string', values: [1,2,3])
+      expect(subject.json_api_command('test', nil, 'x', 'y')).to eq({ code: 1, name: 'string', values: [1,2,3] }.with_indifferent_access)
     end
 
     it "works with a command with standard input" do
       expect(Open3).to receive(:capture3).with('termux-test', stdin_data: 'input data').once.and_return([json_result, '', success])
-      expect(subject.json_api_command('test', 'input data')).to eq(code: 1, name: 'string', values: [1,2,3])
+      expect(subject.json_api_command('test', 'input data')).to eq({ code: 1, name: 'string', values: [1,2,3] }.with_indifferent_access)
     end
 
     it "works with a command with standard input and args" do
       expect(Open3).to receive(:capture3).with('termux-test', 'x', 'y', stdin_data: 'input data').once.and_return([json_result, '', success])
-      expect(subject.json_api_command('test', 'input data', 'x', 'y')).to eq(code: 1, name: 'string', values: [1,2,3])
+      expect(subject.json_api_command('test', 'input data', 'x', 'y')).to eq({ code: 1, name: 'string', values: [1,2,3] }.with_indifferent_access)
     end
   end
 end

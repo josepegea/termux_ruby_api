@@ -62,7 +62,7 @@ EOT
     expect(@base).to receive(:api_command).and_return(result)
     res = @base.call_log.log
     expect(res.size).to eq(3)
-    expect(res.map(&:keys).flatten.uniq).to match_array(%i(name phone_number type date duration))
+    expect(res.map(&:keys).flatten.uniq).to match_array(%w(name phone_number type date duration))
     expect(res.map { |r| r[:type] }).to match_array(%i(INCOMING INCOMING OUTGOING))
     expect(res.map { |r| r[:duration] }).to match_array([270, 0, 147])
     times = ['2018-12-17 05:35:31', '2018-12-17 12:13:31', '2018-12-18 00:16:13'].map { |s| Time.parse(s) }

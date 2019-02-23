@@ -2,9 +2,9 @@ module TermuxRubyApi
   module SubSystems
     class Location < Base
       def get(provider: nil, request: nil)
-        args = []
-        args += ['-p', provider] unless provider.nil?
-        args += ['-r', request] unless request.nil?
+        args = owner.generate_args_list([['-p', provider],
+                                         ['-r', request]
+                                        ])
         res = owner.json_api_command('location', nil, *args)
         TermuxRubyApi::Utils::Xformer.xform(res, provider: :symbol)
       end

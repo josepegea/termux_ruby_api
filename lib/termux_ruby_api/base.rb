@@ -59,6 +59,14 @@ module TermuxRubyApi
       end
     end
 
+    def generate_args_list(args_list)
+      args = args_list.map { |args| generate_args(args) }.flatten.compact
+    end
+
+    def generate_args(args)
+      args.empty? || args.last.blank? ? nil : args
+    end
+
     # SubSystems
 
     def clipboard

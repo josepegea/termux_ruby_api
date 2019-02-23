@@ -100,7 +100,7 @@ EOT
     expect(@base).to receive(:api_command).and_return(result)
     res = @base.sms.list
     expect(res.size).to eq(3)
-    expect(res.map(&:keys).flatten.uniq).to match_array(%i(threadid type read sender number received body))
+    expect(res.map(&:keys).flatten.uniq).to match_array(%w(threadid type read sender number received body))
     expect(res.map { |r| r[:type] }).to match_array(%i(inbox inbox inbox))
     times = ['2018-12-07 18:11', '2018-12-09 16:25', '2018-12-10 00:25'].map { |s| Time.parse(s) }
     expect(res.map { |r| r[:received] }).to match_array(times)

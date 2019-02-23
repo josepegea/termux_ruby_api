@@ -14,6 +14,22 @@ module TermuxRubyApi
           return owner.json_streamed_api_command('sensor', nil, *args)
         end
       end
+
+      def capture_once(*sensors, &block)
+        data = nil
+        capture(limit: 1, sensors: sensors) do |json_result|
+          data = json_result
+        end
+        if block_given?
+          yield data
+        else
+          return data
+        end
+      end
+
+      def list
+        owner.json_api_command('sensor', nil, 'l')&.fetch(:sensors)
+      end
     end
   end
 end
