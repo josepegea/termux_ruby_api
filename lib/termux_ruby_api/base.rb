@@ -103,6 +103,7 @@ module TermuxRubyApi
 
     def prepare_command_args(command, args)
       command = "termux-" + Shellwords.escape(command.to_s)
+      args = args.map { |arg| arg.to_s }
       return command, args
     end
   end
