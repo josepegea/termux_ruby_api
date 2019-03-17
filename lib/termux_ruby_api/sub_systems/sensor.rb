@@ -28,7 +28,7 @@ module TermuxRubyApi
       end
 
       def list
-        owner.json_api_command('sensor', nil, 'l')&.fetch(:sensors)
+        owner.json_api_command('sensor', nil, '-l')&.fetch(:sensors)
       end
     end
   end

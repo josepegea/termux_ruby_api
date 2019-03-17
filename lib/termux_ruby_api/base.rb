@@ -19,7 +19,7 @@ module TermuxRubyApi
   class Base
     def api_command(command, stdin = nil, *args)
       command, args = prepare_command_args(command, args)
-      stdout, stderr, status = Open3.capture3(command, *args, stdin_data: stdin.to_s)
+      stdout, stderr, status = Open3.capture3([command, *args].join(' '), stdin_data: stdin.to_s)
       raise CommandError.new(status: status, stderr: stderr) unless status.success?
       stdout
     end
@@ -91,6 +91,10 @@ module TermuxRubyApi
 
     def sensor
       @sensor ||= SubSystems::Sensor.new(self)
+    end
+
+    def ask
+      @ask ||= SubSystems::Ask.new(self)
     end
 
     protected
