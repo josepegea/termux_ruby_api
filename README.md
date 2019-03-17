@@ -5,19 +5,21 @@ Android functionality thanks to [Termux](https://termux.com/) and
 [Termux API](https://wiki.termux.com/wiki/Termux:API).
 
 
-    require 'termux_ruby_api'
+```ruby
+require 'termux_ruby_api'
 
-    # Connect to the API
-    t_api = TermuxRubyApi::Base.new
+# Connect to the API
+t_api = TermuxRubyApi::Base.new
 
-    # Get a list of the latest 50 calls
-    call_log = t_api.call_log.log(limit: 50)
+# Get a list of the latest 50 calls
+call_log = t_api.call_log.log(limit: 50)
 
-    # Get the total seconds spent in outgoing calls
-    total_duration = call_log.select { |c| c[:type] == :OUTGOING }.map {|c| c[:duration] }.sum
+# Get the total seconds spent in outgoing calls
+total_duration = call_log.select { |c| c[:type] == :OUTGOING }.map {|c| c[:duration] }.sum
 
-    # Get the result in Text To Speak
-    t_api.tts.speak("The total duration is #{total_duration} seconds")
+# Get the result in Text To Speak
+t_api.tts.speak("The total duration is #{total_duration} seconds")
+```
 
 [Termux](https://termux.com/) is a set of Android apps that provide a
 complete Debian-like environment for Android, including Ruby, RubyGems

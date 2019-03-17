@@ -95,8 +95,8 @@ module TermuxRubyApi
       @sensor ||= SubSystems::Sensor.new(self)
     end
 
-    def ask
-      @ask ||= SubSystems::Ask.new(self)
+    def dialog
+      @dialog ||= SubSystems::Dialog.new(self)
     end
 
     protected
