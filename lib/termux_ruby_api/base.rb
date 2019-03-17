@@ -5,6 +5,8 @@ require_relative 'sub_systems'
 require 'shellwords'
 require 'open3'
 
+require 'pry'
+
 module TermuxRubyApi
 
   class CommandError < StandardError
@@ -19,7 +21,7 @@ module TermuxRubyApi
   class Base
     def api_command(command, stdin = nil, *args)
       command, args = prepare_command_args(command, args)
-      stdout, stderr, status = Open3.capture3([command, *args].join(' '), stdin_data: stdin.to_s)
+      stdout, stderr, status = Open3.capture3(command, *args, stdin_data: stdin.to_s)
       raise CommandError.new(status: status, stderr: stderr) unless status.success?
       stdout
     end
@@ -32,7 +34,7 @@ module TermuxRubyApi
 
     def streamed_api_command(command, stdin = nil, *args, &block)
       command, args = prepare_command_args(command, args)
-      i, o, t = Open3.popen2([command, *args].join(' '))
+      i, o, t = Open3.popen2(command, *args)
       i.puts(stdin) unless stdin.blank? # If we have any input, send it to the child
       i.close                           # Afterwards we can close child's stdin
       if block_given?
@@ -101,7 +103,6 @@ module TermuxRubyApi
 
     def prepare_command_args(command, args)
       command = "termux-" + Shellwords.escape(command.to_s)
-      args = args.map { |arg| Shellwords.escape(arg.to_s) }
       return command, args
     end
   end
