@@ -28,7 +28,7 @@ module TermuxRubyApi
       end
 
       def radio(title = nil, result_type: :index, options:)
-        args = owner.generate_args_list([[__callee__],
+        args = owner.generate_args_list([[__callee__.to_s],
                                          ['-t', title],
                                          ['-v', options.join(',')]
                                         ])
@@ -66,9 +66,9 @@ module TermuxRubyApi
         when :raw
           res
         when :boolean
-          res && res[:text] && res[:text].downcase == 'yes'
+          res.present? && res[:text].present? && res[:text].downcase == 'yes'
         when :date
-          res && res[:text] && Date.parse(res[:text])
+          res && res[:text].presence && Date.parse(res[:text])
         else
           res && res[result_type]
         end
