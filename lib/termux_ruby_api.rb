@@ -6,5 +6,4 @@ require "termux_ruby_api/utils"
 
 module TermuxRubyApi
   class Error < StandardError; end
-  # Your code goes here...
 end
