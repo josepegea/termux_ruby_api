@@ -2,18 +2,18 @@ require 'termux_ruby_api'
 
 RSpec.describe TermuxRubyApi::SubSystems::Location do
 
-  let (:result) { <<EOT
-{
-  "latitude": 40.4043461,
-  "longitude": -3.878738,
-  "altitude": 0.0,
-  "accuracy": 18.66699981689453,
-  "bearing": 0.0,
-  "speed": 0.0,
-  "elapsedMs": 1,
-  "provider": "network"
-}
-EOT
+  let (:result) { <<~EOT
+    {
+      "latitude": 40.4043461,
+      "longitude": -3.878738,
+      "altitude": 0.0,
+      "accuracy": 18.66699981689453,
+      "bearing": 0.0,
+      "speed": 0.0,
+      "elapsedMs": 1,
+      "provider": "network"
+    }
+    EOT
   }
     
   before do
